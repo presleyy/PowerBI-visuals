@@ -1,3 +1,4 @@
+/// <reference types="d3" />
 declare module powerbi.extensibility.utils.chart.axis.scale {
     const linear: string;
     const log: string;
@@ -223,6 +224,12 @@ declare module powerbi.extensibility.utils.chart.axis {
         shouldClamp?: boolean;
         /** (optional) Disable "niceing" for numeric axis. It means that if max value is 172 the axis will show 172 but not rounded to upper value 180 */
         disableNice?: boolean;
+        /** (optional) Disable "niceing" for numeric axis. Disabling nice will be applid only when creating scale obj (bestTickCount will be applied to 'ticks' method) */
+        disableNiceOnlyForScale?: boolean;
+        /** (optional) InnerPadding to be applied to the axis.*/
+        innerPadding?: number;
+        /** (optioanl) Apply for using of RangePoints function instead of RangeBands inside CreateOrdinal scale function.*/
+        useRangePoints?: boolean;
     }
     enum AxisOrientation {
         top = 0,
@@ -260,7 +267,7 @@ declare module powerbi.extensibility.utils.chart.axis {
      * but no values are returned by the query.
      */
     const emptyDomain: number[];
-    const stackedAxisPadding: number;
+    const stackedAxisPadding :number;
     function getRecommendedNumberOfTicksForXAxis(availableWidth: number): number;
     function getRecommendedNumberOfTicksForYAxis(availableWidth: number): number;
     /**
@@ -361,7 +368,7 @@ declare module powerbi.extensibility.utils.chart.axis {
         function wordBreak(text: d3.Selection<any>, axisProperties: IAxisProperties, maxHeight: number): void;
         function clip(text: d3.Selection<any>, availableWidth: number, svgEllipsis: (textElement: SVGTextElement, maxWidth: number) => void): void;
     }
-    function createOrdinalScale(pixelSpan: number, dataDomain: any[], outerPaddingRatio?: number): d3.scale.Ordinal<any, any>;
+    function createOrdinalScale(pixelSpan: number, dataDomain: any[], outerPaddingRatio?: number, innerPaddingRatio?: number, useRangePoints?: boolean): d3.scale.Ordinal<any, any>;
     function isLogScalePossible(domain: any[], axisType?: ValueType): boolean;
     function createNumericalScale(axisScaleType: string, pixelSpan: number, dataDomain: any[], dataType: ValueType, outerPadding?: number, niceCount?: number, shouldClamp?: boolean): d3.scale.Linear<any, any>;
     function createLinearScale(pixelSpan: number, dataDomain: any[], outerPadding?: number, niceCount?: number, shouldClamp?: boolean): d3.scale.Linear<any, any>;
@@ -385,7 +392,7 @@ declare module powerbi.extensibility.utils.chart.axis {
 }
 declare module powerbi.extensibility.utils.chart.legend {
     import Point = powerbi.extensibility.utils.svg.Point;
-    import SelectableDataPoint = powerbi.extensibility.utils.interactivity.SelectableDataPoint;
+    import SelectionDataPoint = powerbi.extensibility.utils.interactivity.SelectableDataPoint;
     enum LegendIcon {
         Box = 0,
         Circle = 1,
@@ -406,7 +413,7 @@ declare module powerbi.extensibility.utils.chart.legend {
         textPosition?: Point;
         glyphPosition?: Point;
     }
-    interface LegendDataPoint extends SelectableDataPoint, LegendPosition2D {
+    interface LegendDataPoint extends SelectionDataPoint, LegendPosition2D {
         label: string;
         color: string;
         icon: LegendIcon;
@@ -425,6 +432,7 @@ declare module powerbi.extensibility.utils.chart.legend {
         grouped?: boolean;
         labelColor?: string;
         fontSize?: number;
+        fontFamily?: string;
         measureSum? : number;
         showPrimary? : boolean;
     }
@@ -436,6 +444,7 @@ declare module powerbi.extensibility.utils.chart.legend {
         labelColor: string;
         fontSize: string;
         showPrimary : string;
+
     };
     interface ILegend {
         getMargins(): IViewport;
@@ -452,15 +461,26 @@ declare module powerbi.extensibility.utils.chart.legend {
 declare module powerbi.extensibility.utils.chart.legend {
     import IInteractiveBehavior = powerbi.extensibility.utils.interactivity.IInteractiveBehavior;
     import ISelectionHandler = powerbi.extensibility.utils.interactivity.ISelectionHandler;
-    interface LegendBehaviorOptions {
+    import IBehaviorOptions = powerbi.extensibility.utils.interactivity.IBehaviorOptions;
+    import SelectionDataPoint = powerbi.extensibility.utils.interactivity.SelectableDataPoint;
+    interface LegendBehaviorOptions extends IBehaviorOptions<SelectionDataPoint> {
         legendItems: d3.Selection<any>;
         legendIcons: d3.Selection<any>;
         clearCatcher: d3.Selection<any>;
     }
     class LegendBehavior implements IInteractiveBehavior {
         static dimmedLegendColor: string;
-        private legendIcons;
+        protected legendIcons: any;
         bindEvents(options: LegendBehaviorOptions, selectionHandler: ISelectionHandler): void;
+        renderSelection(hasSelection: boolean): void;
+    }
+}
+declare module powerbi.extensibility.utils.chart.legend {
+    import IInteractiveBehavior = powerbi.extensibility.utils.interactivity.IInteractiveBehavior;
+    import LegendBehavior = powerbi.extensibility.utils.chart.legend.LegendBehavior;
+    class OpacityLegendBehavior extends LegendBehavior implements IInteractiveBehavior {
+        static dimmedOpacity: number;
+        static defaultOpacity: number;
         renderSelection(hasSelection: boolean): void;
     }
 }
@@ -476,7 +496,9 @@ declare module powerbi.extensibility.utils.chart.legend.position {
 }
 declare module powerbi.extensibility.utils.chart.legend {
     import IInteractivityService = powerbi.extensibility.utils.interactivity.IInteractivityService;
-    function createLegend(legendParentElement: JQuery, interactive: boolean, interactivityService: IInteractivityService, isScrollable?: boolean, legendPosition?: LegendPosition): ILegend;
+    import IInteractiveBehavior = powerbi.extensibility.utils.interactivity.IInteractiveBehavior;
+    import SelectionDataPoint = powerbi.extensibility.utils.interactivity.SelectableDataPoint;
+    function createLegend(legendParentElement: JQuery, interactive: boolean, interactivityService: IInteractivityService<SelectionDataPoint>, isScrollable?: boolean, legendPosition?: LegendPosition, interactiveBehavior?: IInteractiveBehavior): ILegend;
     function isLeft(orientation: LegendPosition): boolean;
     function isTop(orientation: LegendPosition): boolean;
     function positionChartArea(chartArea: d3.Selection<any>, legend: ILegend): void;
@@ -499,7 +521,7 @@ declare module powerbi.extensibility.utils.chart.legend {
         private static legendItemMeasureClass;
         private legendContainerParent;
         private legendContainerDiv;
-        constructor(element: JQuery);
+        constructor(JQuery);
         getMargins(): IViewport;
         drawLegend(legendData: LegendData): void;
         reset(): void;
@@ -529,6 +551,8 @@ declare module powerbi.extensibility.utils.chart.legend {
 }
 declare module powerbi.extensibility.utils.chart.legend {
     import IInteractivityService = powerbi.extensibility.utils.interactivity.IInteractivityService;
+    import IInteractiveBehavior = powerbi.extensibility.utils.interactivity.IInteractiveBehavior;
+    import SelectionDataPoint = powerbi.extensibility.utils.interactivity.SelectableDataPoint;
     class SVGLegend implements ILegend {
         private orientation;
         private viewport;
@@ -538,6 +562,7 @@ declare module powerbi.extensibility.utils.chart.legend {
         private clearCatcher;
         private element;
         private interactivityService;
+        private interactiveBehavior?;
         private legendDataStartIndex;
         private arrowPosWindow;
         private data;
@@ -552,6 +577,7 @@ declare module powerbi.extensibility.utils.chart.legend {
         private static LegendIconRadiusFactor;
         private static MaxTextLength;
         private static MaxTitleLength;
+
         private static TextAndIconPadding;
         private static TitlePadding;
         private static LegendEdgeMariginWidth;
@@ -559,6 +585,7 @@ declare module powerbi.extensibility.utils.chart.legend {
         private static TopLegendHeight;
         private static DefaultTextMargin;
         private static DefaultMaxLegendFactor;
+
         private static LegendIconYRatio;
         private static LegendArrowOffset;
         private static LegendArrowHeight;
@@ -570,7 +597,7 @@ declare module powerbi.extensibility.utils.chart.legend {
         private static LegendIcon;
         private static LegendTitle;
         private static NavigationArrow;
-        constructor(element: JQuery, legendPosition: LegendPosition, interactivityService: IInteractivityService, isScrollable: boolean);
+        constructor(JQuery, legendPosition: LegendPosition, interactivityService: IInteractivityService<SelectionDataPoint>, isScrollable: boolean, interactiveBehavior?: IInteractiveBehavior);
         private updateLayout();
         private calculateViewport();
         getMargins(): IViewport;
@@ -844,9 +871,9 @@ declare module powerbi.extensibility.utils.chart.dataLabel {
         movingStep: number;
         hideOverlapped: boolean;
         private defaultDataLabelSettings;
-        defaultSettings: IDataLabelSettings;
+         defaultSettings: IDataLabelSettings;
         /** Arranges the lables position and visibility*/
-        hideCollidedLabels(viewport: IViewport, data: any[], layout: any, addTransform?: boolean): LabelEnabledDataPoint[];
+        hideCollidedLabels(viewport: IViewport, data: any[], layout: any, addTransform?: boolean, hideCollidedLabels?: boolean): LabelEnabledDataPoint[];
         /**
          * Merges the label element info with the panel element info and returns correct label info.
          * @param source The label info.
@@ -931,16 +958,16 @@ declare module powerbi.extensibility.utils.chart.dataLabel.utils {
     const DefaultFontSizeInPt: number;
     const StandardFontFamily: string;
     const LabelTextProperties: TextProperties;
-    const defaultLabelColor: string;
-    const defaultInsideLabelColor: string;
-    const hundredPercentFormat: string;
+    const defaultLabelColor = "string";
+    const defaultInsideLabelColor = "string";
+    const hundredPercentFormat = "string";
     const defaultLabelPrecision: number;
     function updateLabelSettingsFromLabelsObject(labelsObj: DataLabelObject, labelSettings: VisualDataLabelsSettings): void;
     function getDefaultLabelSettings(show?: boolean, labelColor?: string, fontSize?: number): VisualDataLabelsSettings;
     function getDefaultColumnLabelSettings(isLabelPositionInside: boolean): VisualDataLabelsSettings;
     function getDefaultPointLabelSettings(): PointDataLabelsSettings;
     function getLabelPrecision(precision: number, format: string): number;
-    function drawDefaultLabelsForDataPointChart(data: any[], context: d3.Selection<any>, layout: ILabelLayout, viewport: IViewport, isAnimator?: boolean, animationDuration?: number, hasSelection?: boolean): d3.selection.Update<any>;
+    function drawDefaultLabelsForDataPointChart(data: any[], context: d3.Selection<any>, layout: ILabelLayout, viewport: IViewport, isAnimator?: boolean, animationDuration?: number, hasSelection?: boolean, hideCollidedLabels?: boolean): d3.selection.Update<any>;
     function cleanDataLabels(context: d3.Selection<any>, removeLines?: boolean): void;
     function setHighlightedLabelsOpacity(context: d3.Selection<any>, hasSelection: boolean, hasHighlights: boolean): void;
     function getLabelFormattedText(options: LabelFormattedTextOptions): string;
