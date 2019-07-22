@@ -1,8 +1,8 @@
 {
   "visual": {
-    "name": "VennDiagramByMAQSoftwareTest",
+    "name": "VennDiagramByMAQSoftware",
     "displayName": "Venn Diagram by MAQ Software",
-    "guid": "vennDiagram8527AJ74DB74562488PCR752UTY9465_0028",
+    "guid": "vennDiagram8527AJ74DB74562488PCR752UTY9465",
     "visualClassName": "VennDiagram",
     "version": "3.0.7",
     "description": "Overlapping circles illustrate the relationship among two or more datasets",
