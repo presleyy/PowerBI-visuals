@@ -267,7 +267,7 @@ declare module powerbi.extensibility.utils.chart.axis {
      * but no values are returned by the query.
      */
     const emptyDomain: number[];
-    const stackedAxisPadding :number;
+    const stackedAxisPadding: number;
     function getRecommendedNumberOfTicksForXAxis(availableWidth: number): number;
     function getRecommendedNumberOfTicksForYAxis(availableWidth: number): number;
     /**
@@ -420,8 +420,8 @@ declare module powerbi.extensibility.utils.chart.legend {
         category?: string;
         measure?: any;
         measureTooltip?: string;
-        percentage? : string;
-        percTooltip? : string;
+        percentage?: string;
+        percTooltip?: string;
         iconOnlyOnLabel?: boolean;
         tooltip?: string;
         layerNumber?: number;
@@ -433,8 +433,8 @@ declare module powerbi.extensibility.utils.chart.legend {
         labelColor?: string;
         fontSize?: number;
         fontFamily?: string;
-        measureSum? : number;
-        showPrimary? : boolean;
+        measureSum?: number;
+        showPrimary?: boolean;
     }
     const legendProps: {
         show: string;
@@ -443,7 +443,7 @@ declare module powerbi.extensibility.utils.chart.legend {
         showTitle: string;
         labelColor: string;
         fontSize: string;
-        showPrimary : string;
+        showPrimary: string;
 
     };
     interface ILegend {
@@ -521,7 +521,7 @@ declare module powerbi.extensibility.utils.chart.legend {
         private static legendItemMeasureClass;
         private legendContainerParent;
         private legendContainerDiv;
-        constructor(JQuery);
+        constructor(element: JQuery);
         getMargins(): IViewport;
         drawLegend(legendData: LegendData): void;
         reset(): void;
@@ -871,7 +871,7 @@ declare module powerbi.extensibility.utils.chart.dataLabel {
         movingStep: number;
         hideOverlapped: boolean;
         private defaultDataLabelSettings;
-         defaultSettings: IDataLabelSettings;
+        defaultSettings: IDataLabelSettings;
         /** Arranges the lables position and visibility*/
         hideCollidedLabels(viewport: IViewport, data: any[], layout: any, addTransform?: boolean, hideCollidedLabels?: boolean): LabelEnabledDataPoint[];
         /**
@@ -958,9 +958,9 @@ declare module powerbi.extensibility.utils.chart.dataLabel.utils {
     const DefaultFontSizeInPt: number;
     const StandardFontFamily: string;
     const LabelTextProperties: TextProperties;
-    const defaultLabelColor = "string";
-    const defaultInsideLabelColor = "string";
-    const hundredPercentFormat = "string";
+    const defaultLabelColor: string;
+    const defaultInsideLabelColor: string;
+    const hundredPercentFormat: string;
     const defaultLabelPrecision: number;
     function updateLabelSettingsFromLabelsObject(labelsObj: DataLabelObject, labelSettings: VisualDataLabelsSettings): void;
     function getDefaultLabelSettings(show?: boolean, labelColor?: string, fontSize?: number): VisualDataLabelsSettings;

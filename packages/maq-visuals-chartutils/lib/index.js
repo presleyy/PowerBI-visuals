@@ -2695,23 +2695,16 @@ var powerbi;
                         };
                         SVGLegend.prototype.calculateHorizontalLayout = function (dataPoints, title, navigationArrows) {
                             if (this.data.showPrimary != undefined) {
-
-                                // calculate the text shift
                                 var HorizontalTextShift = 4;
                                 var HorizontalIconShift = 11;
-                                // check if we need more space for the margin, or use the default text padding
                                 var fontSizeBiggerThanDefault = this.legendFontSizeMarginDifference > 0;
                                 var fontSizeMargin = fontSizeBiggerThanDefault ? SVGLegend.TextAndIconPadding + this.legendFontSizeMarginDifference : SVGLegend.TextAndIconPadding;
-                                //var fixedTextShift = (fontSizeMargin / (SVGLegend.LegendIconRadiusFactor / 2)) + HorizontalTextShift;
                                 var occupiedWidth = 0;
                                 var totalSpaceOccupiedThusFar = 0;
                                 var fixedTextShift = SVGLegend.LegendIconRadius + fontSizeMargin + HorizontalTextShift;
                                 var fixedIconShift = HorizontalIconShift + (fontSizeBiggerThanDefault ? this.legendFontSizeMarginDifference : 0);
-
-                                // calculate the size of the space for both sides of the radius
                                 var iconTotalItemPadding = SVGLegend.LegendIconRadius * 2 + fontSizeMargin * 3;
                                 var numberOfItems = dataPoints.length;
-
                                 var primaryMeasureLength = 0;
                                 if (this.showPrimary) {
                                     primaryMeasureLength = dataPoints[0]['measure'].length;
@@ -2931,9 +2924,6 @@ var powerbi;
 
                                         dp['percentage'] = textMeasurementService.getTailoredTextOrDefault(SVGLegend.getTextProperties(false, dp['percentage'], this.data.fontSize, this.data.fontFamily),
                                             maxHorizontalSpaceAvaliable);
-                                    }
-                                    else {
-                                        dp.measure = dp.measure;
                                     }
                                     totalSpaceOccupiedThusFar += verticalLegendHeight;
                                     if (totalSpaceOccupiedThusFar > parentHeight) {
