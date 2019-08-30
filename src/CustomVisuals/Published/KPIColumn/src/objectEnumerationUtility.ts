@@ -13,7 +13,7 @@ module powerbi.extensibility.visual {
         if (objects) {
             const object: DataViewObject = objects[objectName];
             if (object) {
-                const property: T = object[propertyName] as T;
+                const property: T = <T> object[propertyName];
                 if (property !== undefined) {
                     return property;
                 }
@@ -42,7 +42,7 @@ module powerbi.extensibility.visual {
             if (categoryObject) {
                 const object: DataViewPropertyValue = categoryObject[objectName];
                 if (object) {
-                    const property: T = object[propertyName] as T;
+                    const property: T = <T> object[propertyName];
                     if (property !== undefined) {
                         return property;
                     }
