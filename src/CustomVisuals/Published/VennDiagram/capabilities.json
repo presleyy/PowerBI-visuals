@@ -96,10 +96,6 @@
                             {
                                 "value": "RightCenter",
                                 "displayName": "Right center"
-                            },
-                            {
-                                "value": "None",
-                                "displayName": "None"
                             }
                         ]
                     }
