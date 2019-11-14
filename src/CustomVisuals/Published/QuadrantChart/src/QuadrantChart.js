@@ -3830,7 +3830,16 @@ function MAQDrawChart(DataStyle, settings, nodeData, seriesData, assignData, val
                 text: "",
                 style: xAxisLabel.style
             };
+            // var oAttrQuadrantLabel = {
+            //     x: (gridX / 2) - (leftSpacing/2),
+            //     y: gridY,
+            //     dx: 0,
+            //     dy: 0,
+            //     text: "",
+            //     style: xAxisLabel.style
+            // };
             oAttrQuadrantLabel['text-anchor'] = "start";
+            oAttrQuadrantLabel.style.fontSize = "7px";
             var i = 0, labelText, oQuadrantLabel;
 
             //showing four quadrants from here.
@@ -3852,6 +3861,7 @@ function MAQDrawChart(DataStyle, settings, nodeData, seriesData, assignData, val
                 var availableWidth;
                 if (i === 0 || i === 3) {
                     availableWidth = (chartConfigOptions.availWidth * (config.xAxis.gridLineX) / (xAxisSeries[0] + xAxisSeries[xAxisSeries.length - 1])) / 2;
+                    //availableWidth = chartConfigOptions.availWidth * (xAxisSeries[xAxisSeries.length - 1] + xAxisSeries[0] - config.xAxis.gridLineX) / xAxisSeries[xAxisSeries.length - 1] + xAxisSeries[0] / 2;
                 }
                 else {
                     availableWidth = chartConfigOptions.availWidth * (xAxisSeries[xAxisSeries.length - 1] + xAxisSeries[0] - config.xAxis.gridLineX) / xAxisSeries[xAxisSeries.length - 1] + xAxisSeries[0] / 2;
@@ -3886,6 +3896,16 @@ function MAQDrawChart(DataStyle, settings, nodeData, seriesData, assignData, val
                 if (i === 2) {
                     oAttrQuadrantLabel.x = gridX / 2 + leftSpacing;
                 }
+                // if (i % 2 === 0) {
+                //     oAttrQuadrantLabel.x = (chartConfigOptions.availWidth) * (config.xAxis.gridLineX + (xAxisSeries[xAxisSeries.length - 1] + xAxisSeries[0] - config.xAxis.gridLineX) / 2) / (xAxisSeries[0] + xAxisSeries[xAxisSeries.length - 1]) - (leftSpacing/2);
+                //     availableWidth = xAxisSeries[(xAxisSeries.length - 1)] - config.xAxis.gridLineX;
+                // }
+                // else {
+                //     oAttrQuadrantLabel.y = (chartConfigOptions.availHeight) * ((yAxisSeries[yAxisSeriesLength] + yAxisSeries[0] - config.yAxis.gridLineY) / 2) / (yAxisSeries[yAxisSeriesLength] + yAxisSeries[0]);
+                // }
+                // if (i === 2) {
+                //     oAttrQuadrantLabel.x = gridX / 2 - (leftSpacing/2);
+                // }
                 i++;
             }
         };
@@ -4138,6 +4158,9 @@ function MAQDrawChart(DataStyle, settings, nodeData, seriesData, assignData, val
                             else {
                                 oBubbleAttr.r = 12; //if all values for radius- dataset is 0, set it to default   
                             }
+                            // if(oBubbleAttr.r < 3){
+                            //     oBubbleAttr.r = 3;
+                            // }
                             oBubble = MAQ.createSVGElement(chartConfigOptions.svgNS, 'circle', oBubbleAttr);
                             oGrpBubbleChart.appendChild(oBubble);
                             oParam = {
