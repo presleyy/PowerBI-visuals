@@ -3823,7 +3823,7 @@ function MAQDrawChart(DataStyle, settings, nodeData, seriesData, assignData, val
             var gridX = (chartConfigOptions.availWidth) * (config.xAxis.gridLineX) / (xAxisSeries[0] + xAxisSeries[xAxisSeries.length - 1]);
             var gridY = (chartConfigOptions.availHeight) * (yAxisSeries[yAxisSeriesLength] + yAxisSeries[0] - config.yAxis.gridLineY / 2) / (yAxisSeries[yAxisSeriesLength] + yAxisSeries[0]);
             var oAttrQuadrantLabel = {
-                x: ((gridX / 2) + leftSpacing),
+                x: ((gridX / 2) - (leftSpacing/2)),
                 y: gridY,
                 dx: 0,
                 dy: 0,
@@ -3831,6 +3831,7 @@ function MAQDrawChart(DataStyle, settings, nodeData, seriesData, assignData, val
                 style: xAxisLabel.style
             };
             oAttrQuadrantLabel['text-anchor'] = "start";
+            oAttrQuadrantLabel.style.fontSize = "0.8em";
             var i = 0, labelText, oQuadrantLabel;
 
             //showing four quadrants from here.
@@ -3850,12 +3851,13 @@ function MAQDrawChart(DataStyle, settings, nodeData, seriesData, assignData, val
                 title.textContent = chartConfigOptions.legend.quadrantLabels[i];
                 //check for the available width to clip the Quadrant labels
                 var availableWidth;
-                if (i === 0 || i === 3) {
-                    availableWidth = (chartConfigOptions.availWidth * (config.xAxis.gridLineX) / (xAxisSeries[0] + xAxisSeries[xAxisSeries.length - 1])) / 2;
-                }
-                else {
-                    availableWidth = chartConfigOptions.availWidth * (xAxisSeries[xAxisSeries.length - 1] + xAxisSeries[0] - config.xAxis.gridLineX) / xAxisSeries[xAxisSeries.length - 1] + xAxisSeries[0] / 2;
-                }
+                // if (i === 0 || i === 3) {
+                //     availableWidth = (chartConfigOptions.availWidth * (config.xAxis.gridLineX) / (xAxisSeries[0] + xAxisSeries[xAxisSeries.length - 1])) / 2;
+                // }
+                // else {
+                //     availableWidth = chartConfigOptions.availWidth * (xAxisSeries[xAxisSeries.length - 1] + xAxisSeries[0] - config.xAxis.gridLineX) / xAxisSeries[xAxisSeries.length - 1] + xAxisSeries[0] / 2;
+                // }
+                availableWidth = chartConfigOptions.availWidth * (xAxisSeries[xAxisSeries.length - 1] + xAxisSeries[0] - config.xAxis.gridLineX) / xAxisSeries[xAxisSeries.length - 1] + xAxisSeries[0] / 2;
                 var titleCopy;
                 while ((iCounter < length) && (quadrantNameWidth) >= (availableWidth)) {
                     oGrpQuadrantLabels.removeChild(oQuadrantLabel);
@@ -3877,14 +3879,14 @@ function MAQDrawChart(DataStyle, settings, nodeData, seriesData, assignData, val
                 oQuadrantLabelCopyText.appendChild(title);
                 oGrpQuadrantLabels.appendChild(oQuadrantLabelCopyText);
                 if (i % 2 === 0) {
-                    oAttrQuadrantLabel.x = (chartConfigOptions.availWidth) * (config.xAxis.gridLineX + (xAxisSeries[xAxisSeries.length - 1] + xAxisSeries[0] - config.xAxis.gridLineX) / 2) / (xAxisSeries[0] + xAxisSeries[xAxisSeries.length - 1]) + leftSpacing;
+                    oAttrQuadrantLabel.x = (chartConfigOptions.availWidth) * (config.xAxis.gridLineX + (xAxisSeries[xAxisSeries.length - 1] + xAxisSeries[0] - config.xAxis.gridLineX) / 2) / (xAxisSeries[0] + xAxisSeries[xAxisSeries.length - 1]) - (leftSpacing/2);
                     availableWidth = xAxisSeries[(xAxisSeries.length - 1)] - config.xAxis.gridLineX;
                 }
                 else {
                     oAttrQuadrantLabel.y = (chartConfigOptions.availHeight) * ((yAxisSeries[yAxisSeriesLength] + yAxisSeries[0] - config.yAxis.gridLineY) / 2) / (yAxisSeries[yAxisSeriesLength] + yAxisSeries[0]);
                 }
                 if (i === 2) {
-                    oAttrQuadrantLabel.x = gridX / 2 + leftSpacing;
+                    oAttrQuadrantLabel.x = gridX / 2 - (leftSpacing/2);
                 }
                 i++;
             }
@@ -4133,10 +4135,13 @@ function MAQDrawChart(DataStyle, settings, nodeData, seriesData, assignData, val
                             oBubbleAttr.cx = iXcord;
                             oBubbleAttr.cy = iYcord;
                             if (maxRadius !== 0) {
-                                oBubbleAttr.r = (oDataArray.radius[iCounter] / maxRadius) * 12; //normalize bubble radius according to input
+                                oBubbleAttr.r = (oDataArray.radius[iCounter] / maxRadius) * 20; //normalize bubble radius according to input
                             }
                             else {
-                                oBubbleAttr.r = 12; //if all values for radius- dataset is 0, set it to default   
+                                oBubbleAttr.r = 20; //if all values for radius- dataset is 0, set it to default   
+                            }
+                            if(oBubbleAttr.r < 4) {
+                                oBubbleAttr.r = 4;
                             }
                             oBubble = MAQ.createSVGElement(chartConfigOptions.svgNS, 'circle', oBubbleAttr);
                             oGrpBubbleChart.appendChild(oBubble);
@@ -4154,7 +4159,7 @@ function MAQDrawChart(DataStyle, settings, nodeData, seriesData, assignData, val
                         }
                     }
                 
-                MAQ.animateElement(oGrpELE, 'opacity', 1, 1000);
+                MAQ.animateElement(oGrpELE, 'opacity', 0.7, 300);
             }
         }
         };
